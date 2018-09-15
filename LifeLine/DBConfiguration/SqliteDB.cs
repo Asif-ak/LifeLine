@@ -14,6 +14,7 @@ namespace LifeLine_WebApi.DBConfiguration
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             base.OnModelCreating(modelBuilder);
         }
         
