@@ -27,7 +27,17 @@ namespace LifeLine
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            // we cannot setup antiforgery key on open api.
+            //services.AddMvc(options =>
+            //{
+            //    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            //}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddMvc(options=>
+            {
+                options.Filters.Add(new RequireHttpsAttribute()); // to make sure we are https only.
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             var connection = "Data Source=LifeLine.db";
             services.AddDbContext<LifeLineContext>
             (Options => Options.UseSqlite(connection));
@@ -44,7 +54,17 @@ namespace LifeLine
             {
                 app.UseHsts();
             }
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+            });
 
+            app.UseHsts(opt => opt.MaxAge(days: 365).IncludeSubdomains());
+            app.UseXXssProtection(opt => opt.EnabledWithBlockMode());
+            app.UseXContentTypeOptions();
+            app.UseXfo(opt => opt.Deny());
+            app.UseReferrerPolicy(opt => opt.SameOrigin());
+            
             app.UseHttpsRedirection();
             app.UseMvc();
         }
