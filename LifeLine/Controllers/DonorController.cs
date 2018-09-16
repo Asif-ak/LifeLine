@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using LifeLine_WebApi.DBConfiguration;
 using LifeLine_WebApi.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LifeLine_WebAPi.Controllers
@@ -31,9 +30,18 @@ namespace LifeLine_WebAPi.Controllers
 
         // GET: api/Donor/5
         [HttpGet("{id}", Name = "Get")]
-        public Donor Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return _context.Donors.FirstOrDefault(i => i.DonorID == id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var donor= await _context.Donors.FindAsync(id);
+            if(donor==null)
+            {
+                return NotFound();
+            }
+            return Ok(donor);
 
         }
 

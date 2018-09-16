@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using LifeLine_WebApi.DBConfiguration;
+﻿using LifeLine_WebApi.DBConfiguration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace LifeLine
 {
@@ -38,6 +31,7 @@ namespace LifeLine
                 options.Filters.Add(new RequireHttpsAttribute()); // to make sure we are https only.
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            
             var connection = "Data Source=LifeLine.db";
             services.AddDbContext<LifeLineContext>
             (Options => Options.UseSqlite(connection));
@@ -59,6 +53,7 @@ namespace LifeLine
                 ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
             });
 
+            
             app.UseHsts(opt => opt.MaxAge(days: 365).IncludeSubdomains());
             app.UseXXssProtection(opt => opt.EnabledWithBlockMode());
             app.UseXContentTypeOptions();

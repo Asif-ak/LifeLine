@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using LifeLine_WebApi.Models;
 namespace LifeLine_WebApi.DBConfiguration
@@ -17,6 +17,8 @@ namespace LifeLine_WebApi.DBConfiguration
             
             base.OnModelCreating(modelBuilder);
         }
+
+        public DbSet<LifeLine_WebApi.Models.Requestor> Requestor { get; set; }
         
     }
 
