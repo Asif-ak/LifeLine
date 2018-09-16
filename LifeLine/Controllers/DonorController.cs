@@ -74,8 +74,7 @@ namespace LifeLine_WebAPi.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}", Name = "Delete")]
-        //[HttpDelete]//("{id}"]
-        //[Route("api/donor/Delete/{id}")]
+        
         public async Task<HttpResponseMessage> Delete(int id)
         {
             var donor = _context.Donors.Where(a => a.DonorID == id).FirstOrDefault();
