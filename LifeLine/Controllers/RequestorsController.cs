@@ -50,8 +50,7 @@ namespace LifeLine_WebAPi.Controllers
             return Ok(requestor);
         }
 
-
-
+        // isko sai krna hai
         [HttpPost]
         public async Task<HttpResponseMessage> PostRequestor([FromForm] Requestor requestor, [FromForm] Requests requests)
         {
@@ -59,28 +58,39 @@ namespace LifeLine_WebAPi.Controllers
             {
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
-            var value = _context.Requestor.FirstOrDefault(a => a.RequestorCellNumber == requestor.RequestorCellNumber).RequestorCellNumber;
+            var value = _context.Requestor.Any(a => a.RequestorCellNumber == requestor.RequestorCellNumber);
+            var valuee = _context.Requestor.FirstOrDefault(a => a.RequestorCellNumber == requestor.RequestorCellNumber);
             Requests rr = new Requests
             {
-                Requestor = requestor,
+                Requestor = valuee,
                 RequestedBloodtype = requests.RequestedBloodtype,
                 IsActive = true
             };
-            if (value != null)
+
+            try
             {
-                
-                _context.Requests.Add(rr);
+                if (!value) // code is not working with already existing entries 
+                {
+
+                    _context.Requestor.Add(requestor);
+                    _context.Requests.Include(a => a.Requestor).First();
+                    _context.Requests.Add(rr);
+                    await _context.SaveChangesAsync();
+                    return new HttpResponseMessage(HttpStatusCode.Accepted);
+
+
+                }
+                else // code is working with already existing entries 
+                {
+                    _context.Requests.Add(rr);
+                    await _context.SaveChangesAsync();
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
             }
-            else
+            catch (Exception)
             {
-                _context.Requestor.Add(requestor);
-                _context.Requests.Add(rr);
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
-
-
-            await _context.SaveChangesAsync();
-
-            return new HttpResponseMessage(HttpStatusCode.OK); ;
         }
 
         // DELETE: api/Requestors/5

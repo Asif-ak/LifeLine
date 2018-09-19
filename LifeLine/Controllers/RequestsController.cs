@@ -28,32 +28,30 @@ namespace LifeLine_WebAPi.Controllers
             return _context.Requests.ToList();
         }
         // GET: api/Requests/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetRequests([FromRoute] int id)
+        //[HttpGet("{id}", Name = "GetByID")]
+        
+        //public async Task<IActionResult> GetRequests([FromRoute] int id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    var requests = await _context.Requests.FindAsync(id);
+
+        //    if (requests == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(requests);
+        //}
+
+        // GET: api/Requests/92**********
+        [HttpGet("{number}",Name = "GetByNumber")]
+        
+        public IActionResult GetRequestsByNumber([FromRoute] string number)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var requests = await _context.Requests.FindAsync(id);
-
-            if (requests == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(requests);
-        }
-
-        // GET: api/Requests/5
-        [HttpGet("{number}")]
-        public IActionResult GetRequests([FromRoute] string number)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var result = (from requestor in _context.Requestor
                           join request in _context.Requests on requestor.ID equals request.Requestor.ID
                           where requestor.RequestorCellNumber == number
@@ -65,7 +63,7 @@ namespace LifeLine_WebAPi.Controllers
                               date = requestor.RequestedOn,
                               bloodtype = Enum.GetName(typeof(BloodType), request.RequestedBloodtype),
                               Active = (bool)request.IsActive
-                          }).GroupBy(a => a.number).ToList();
+                          }).ToList();
 
 
 
@@ -76,6 +74,8 @@ namespace LifeLine_WebAPi.Controllers
 
             return Ok(result);
         }
+
+        // isko bhi sai krna hai
 
         // PUT: api/Requests/5
         [HttpPut("{id}")]
@@ -93,8 +93,11 @@ namespace LifeLine_WebAPi.Controllers
             var request = _context.Requests.FirstOrDefault(a => a.RequestID == id);
             Requests _requests = new Requests
             {
-                IsActive=requests.IsActive,  RequestedBloodtype=requests.RequestedBloodtype, RequestID=id,Requestor=request.Requestor
-                
+                IsActive = requests.IsActive,
+                RequestedBloodtype = requests.RequestedBloodtype,
+                RequestID = id,
+                Requestor = request.Requestor
+
             };
             //request.IsActive = requests.IsActive;
             //request.RequestID = id;
