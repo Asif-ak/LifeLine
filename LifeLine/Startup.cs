@@ -32,7 +32,7 @@ namespace LifeLine
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             
-            var connection = "Data Source=LifeLine.db";
+            var connection = "Data Source=LifeLine1.db";
             services.AddDbContext<LifeLineContext>
             (Options => Options.UseSqlite(connection));
         }

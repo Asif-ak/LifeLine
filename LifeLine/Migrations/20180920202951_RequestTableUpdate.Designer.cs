@@ -3,14 +3,16 @@ using System;
 using LifeLine_WebApi.DBConfiguration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LifeLineWebAPi.Migrations
 {
     [DbContext(typeof(LifeLineContext))]
-    partial class LifeLineContextModelSnapshot : ModelSnapshot
+    [Migration("20180920202951_RequestTableUpdate")]
+    partial class RequestTableUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

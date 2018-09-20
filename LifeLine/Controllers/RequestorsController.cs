@@ -58,30 +58,34 @@ namespace LifeLine_WebAPi.Controllers
             {
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
-            var value = _context.Requestor.Any(a => a.RequestorCellNumber == requestor.RequestorCellNumber);
-            var valuee = _context.Requestor.FirstOrDefault(a => a.RequestorCellNumber == requestor.RequestorCellNumber);
-            Requests rr = new Requests
-            {
-                Requestor = valuee,
-                RequestedBloodtype = requests.RequestedBloodtype,
-                IsActive = true
-            };
-
+            
+            var value = _context.Requestor.FirstOrDefault(a => a.RequestorCellNumber == requestor.RequestorCellNumber);
             try
             {
-                if (!value) // code is not working with already existing entries 
+                if (value == null) 
                 {
+                    var add=_context.Requestor.Add(requestor);
+                    await _context.SaveChangesAsync();
+                    Requests rr = new Requests
+                    {
+                        RID = add.Entity.ID,
+                        RequestedBloodtype = requests.RequestedBloodtype,
+                        IsActive = true
+                    };
 
-                    _context.Requestor.Add(requestor);
-                    _context.Requests.Include(a => a.Requestor).First();
                     _context.Requests.Add(rr);
                     await _context.SaveChangesAsync();
                     return new HttpResponseMessage(HttpStatusCode.Accepted);
 
-
                 }
                 else // code is working with already existing entries 
                 {
+                    Requests rr = new Requests
+                    {
+                        RID = value.ID,
+                        RequestedBloodtype = requests.RequestedBloodtype,
+                        IsActive = true
+                    };
                     _context.Requests.Add(rr);
                     await _context.SaveChangesAsync();
                     return new HttpResponseMessage(HttpStatusCode.OK);

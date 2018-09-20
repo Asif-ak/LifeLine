@@ -53,7 +53,7 @@ namespace LifeLine_WebAPi.Controllers
         public IActionResult GetRequestsByNumber([FromRoute] string number)
         {
             var result = (from requestor in _context.Requestor
-                          join request in _context.Requests on requestor.ID equals request.Requestor.ID
+                          join request in _context.Requests on requestor.ID equals request.RID
                           where requestor.RequestorCellNumber == number
                           select new
                           {

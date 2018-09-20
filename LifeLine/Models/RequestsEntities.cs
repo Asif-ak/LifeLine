@@ -10,7 +10,8 @@ namespace LifeLine_WebApi.Models
         [Required]
         public BloodType RequestedBloodtype { get; set; }
         public bool IsActive { get;set; }
-
+        [Required]
+        public int RID { get; set; }
         public virtual Requestor Requestor { get; set; }
 
 
