@@ -15,5 +15,5 @@ This api has 3 controllers:
 
 The Controllers accepts the following methods:
 * DonorController
-    1. Get(): to get all registered donors on [localhost](api/Donor)
+    1. Get(): to get all registered donors on (/api/Donor)
     
