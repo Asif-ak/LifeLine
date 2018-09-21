@@ -9,6 +9,7 @@ using LifeLine_WebApi.DBConfiguration;
 using LifeLine_WebApi.Models;
 using System.Net.Http;
 using System.Net;
+using LifeLine_WebAPi.WrapperCLasses;
 
 namespace LifeLine_WebAPi.Controllers
 {
@@ -55,9 +56,10 @@ namespace LifeLine_WebAPi.Controllers
         public async Task<HttpResponseMessage> PostRequestor([FromForm] Requestor requestor, [FromForm] Requests requests)
         {
             if (!ModelState.IsValid)
-            {
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
-            }
+
+            if (!HelperClass.IsValidEmail(requestor.Email))
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
 
             var value = _context.Requestor.FirstOrDefault(a => a.RequestorCellNumber == requestor.RequestorCellNumber);
             try
@@ -72,13 +74,11 @@ namespace LifeLine_WebAPi.Controllers
                         RequestedBloodtype = requests.RequestedBloodtype,
                         IsActive = true
                     };
-
                     _context.Requests.Add(rr);
                     await _context.SaveChangesAsync();
                     return new HttpResponseMessage(HttpStatusCode.Accepted);
-
                 }
-                else 
+                else
                 {
                     Requests rr = new Requests
                     {

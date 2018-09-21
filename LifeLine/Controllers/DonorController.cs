@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using LifeLine_WebApi.DBConfiguration;
 using LifeLine_WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using LifeLine_WebAPi.WrapperCLasses;
 
 namespace LifeLine_WebAPi.Controllers
 {
@@ -52,17 +53,22 @@ namespace LifeLine_WebAPi.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                if (!HelperClass.IsValidEmail(value.Email))
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
                 if (_context.Donors.Any(a => a.DonorCellNumber == value.DonorCellNumber))
                     return new HttpResponseMessage(HttpStatusCode.AlreadyReported);
-                var _donor = new Donor
-                {
-                    DonorName = value.DonorName,
-                    City = value.City,
-                    DonorCellNumber = value.DonorCellNumber,
-                    DonorBloodtype = value.DonorBloodtype
-                };
+                //var _donor = new Donor
+                //{
+                //    DonorName = value.DonorName,
+                //    City = value.City,
+                //    DonorCellNumber = value.DonorCellNumber,
+                //    DonorBloodtype = value.DonorBloodtype,
+                //    Email=value.Email
+                //};
                 
-                await _context.Donors.AddAsync(_donor);
+                await _context.Donors.AddAsync(value);
                 
                 await _context.SaveChangesAsync();
 

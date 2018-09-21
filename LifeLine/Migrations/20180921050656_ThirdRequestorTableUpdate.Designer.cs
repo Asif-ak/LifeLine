@@ -3,14 +3,16 @@ using System;
 using LifeLine_WebApi.DBConfiguration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LifeLineWebAPi.Migrations
 {
     [DbContext(typeof(LifeLineContext))]
-    partial class LifeLineContextModelSnapshot : ModelSnapshot
+    [Migration("20180921050656_ThirdRequestorTableUpdate")]
+    partial class ThirdRequestorTableUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,9 +36,6 @@ namespace LifeLineWebAPi.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(80);
-
                     b.HasKey("DonorID");
 
                     b.ToTable("Donors");
@@ -53,7 +52,7 @@ namespace LifeLineWebAPi.Migrations
                         .HasMaxLength(75);
 
                     b.Property<string>("Email")
-                        .HasMaxLength(80);
+                        .HasMaxLength(30);
 
                     b.Property<DateTime>("RequestedOn");
 
