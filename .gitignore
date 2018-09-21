@@ -260,5 +260,6 @@ paket-files/
 __pycache__/
 *.pyc
 
-DB Files
+DB Files|| other files
 *.db
+*.dg
