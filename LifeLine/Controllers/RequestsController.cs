@@ -23,9 +23,25 @@ namespace LifeLine_WebAPi.Controllers
 
         // GET: api/Requests
         [HttpGet]
-        public IEnumerable<Requests> GetRequests()
+        public IActionResult GetRequests()
         {
-            return _context.Requests.ToList();
+            //var result= _context.Requests.ToList();
+            var result = (from request in _context.Requests
+                          join requestor in _context.Requestor on request.RID equals requestor.ID
+                          select new
+                          {
+                              id = request.RequestID,
+                              requestedbloodtype = Enum.GetName(typeof(BloodType), request.RequestedBloodtype),
+                              Active = (bool)request.IsActive,
+                              requestornumber=requestor.RequestorCellNumber, // or requestor.id
+                              requestor = requestor.RequestorName
+                          }
+                         ).ToList();
+            if (result==null)
+            {
+                return NotFound(); 
+            }
+            return Ok(result);
         }
 
         // GET: api/Requests/5
@@ -65,8 +81,8 @@ namespace LifeLine_WebAPi.Controllers
                               city = requestor.City,
                               address = requestor.DonationAddress,
                               email = requestor.Email,
-                              bloodtype = Enum.GetName(typeof(BloodType), request.RequestedBloodtype),
-                              Active = (bool)request.IsActive,
+                              requestedbloodtype = Enum.GetName(typeof(BloodType), request.RequestedBloodtype),
+                              Active = (bool)request.IsActive
                           }).ToList();
 
 
