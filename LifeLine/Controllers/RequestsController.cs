@@ -27,9 +27,10 @@ namespace LifeLine_WebAPi.Controllers
         {
             return _context.Requests.ToList();
         }
+
         // GET: api/Requests/5
         //[HttpGet("{id}", Name = "GetByID")]
-        
+
         //public async Task<IActionResult> GetRequests([FromRoute] int id)
         //{
         //    if (!ModelState.IsValid)
@@ -46,10 +47,10 @@ namespace LifeLine_WebAPi.Controllers
 
         //    return Ok(requests);
         //}
+        //
 
-        // GET: api/Requests/92**********
-        [HttpGet("{number}",Name = "GetByNumber")]
-        
+        //GET: api/Requests/92**********
+        [HttpGet("{number}", Name = "GetByNumber")] //// GET: api/Requests/923*********S
         public IActionResult GetRequestsByNumber([FromRoute] string number)
         {
             var result = (from requestor in _context.Requestor

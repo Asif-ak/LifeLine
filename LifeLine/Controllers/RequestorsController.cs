@@ -50,7 +50,7 @@ namespace LifeLine_WebAPi.Controllers
             return Ok(requestor);
         }
 
-        // isko sai krna hai
+        // POST:api/Requestors
         [HttpPost]
         public async Task<HttpResponseMessage> PostRequestor([FromForm] Requestor requestor, [FromForm] Requests requests)
         {
@@ -58,13 +58,13 @@ namespace LifeLine_WebAPi.Controllers
             {
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
-            
+
             var value = _context.Requestor.FirstOrDefault(a => a.RequestorCellNumber == requestor.RequestorCellNumber);
             try
             {
-                if (value == null) 
+                if (value == null)
                 {
-                    var add=_context.Requestor.Add(requestor);
+                    var add = _context.Requestor.Add(requestor);
                     await _context.SaveChangesAsync();
                     Requests rr = new Requests
                     {
@@ -78,7 +78,7 @@ namespace LifeLine_WebAPi.Controllers
                     return new HttpResponseMessage(HttpStatusCode.Accepted);
 
                 }
-                else // code is working with already existing entries 
+                else 
                 {
                     Requests rr = new Requests
                     {

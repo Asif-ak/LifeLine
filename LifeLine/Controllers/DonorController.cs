@@ -61,11 +61,18 @@ namespace LifeLine_WebAPi.Controllers
                     DonorCellNumber = value.DonorCellNumber,
                     DonorBloodtype = value.DonorBloodtype
                 };
-
+                
                 await _context.Donors.AddAsync(_donor);
+                
                 await _context.SaveChangesAsync();
-                var message = new HttpResponseMessage(HttpStatusCode.Created);
-                return message;
+
+                _context.ChangeTracker.Tracked += (s, e) =>
+                  {
+                      
+                      
+                  };
+                return new HttpResponseMessage(HttpStatusCode.Created);
+                //return message;
             }
             catch (Exception)
             {
