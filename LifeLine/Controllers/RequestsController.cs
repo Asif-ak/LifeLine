@@ -62,8 +62,11 @@ namespace LifeLine_WebAPi.Controllers
                               name = requestor.RequestorName,
                               number = requestor.RequestorCellNumber,
                               date = requestor.RequestedOn,
+                              city = requestor.City,
+                              address = requestor.DonationAddress,
+                              email = requestor.Email,
                               bloodtype = Enum.GetName(typeof(BloodType), request.RequestedBloodtype),
-                              Active = (bool)request.IsActive
+                              Active = (bool)request.IsActive,
                           }).ToList();
 
 

@@ -31,7 +31,11 @@ namespace LifeLine
                 options.Filters.Add(new RequireHttpsAttribute()); // to make sure we are https only.
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            
+            services.AddMvc().AddJsonOptions(opt =>
+            {
+                opt.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+            });
+
             var connection = "Data Source=LifeLine1.db";
             services.AddDbContext<LifeLineContext>
             (Options => Options.UseSqlite(connection));
