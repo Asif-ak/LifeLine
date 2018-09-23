@@ -11,8 +11,8 @@ using LifeLine_WebAPi.WrapperCLasses;
 
 namespace LifeLine_WebAPi.Controllers
 {
-
-    [Route("api/donor")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/donor")]
     [ApiController]
     public class DonorController : ControllerBase
     {

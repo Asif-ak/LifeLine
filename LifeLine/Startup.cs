@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,14 @@ namespace LifeLine
             {
                 options.Filters.Add(new RequireHttpsAttribute()); // to make sure we are https only.
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddApiVersioning(opt =>
+            {
+                opt.ReportApiVersions = true;
+                opt.AssumeDefaultVersionWhenUnspecified = true;
+                opt.DefaultApiVersion = new ApiVersion(1, 0);
+                //opt.ApiVersionReader = new HeaderApiVersionReader("api-version"); // we are not using HTTP hearders for reading version
+            });
 
             services.AddMvc().AddJsonOptions(opt =>
             {
