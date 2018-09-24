@@ -46,8 +46,8 @@ namespace LifeLine_WebAPi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var donor= await _context.Donors.FindAsync(id);
-            if(donor==null)
+            var donor = await _context.Donors.FindAsync(id);
+            if (donor == null)
             {
                 return NotFound();
             }
@@ -65,31 +65,31 @@ namespace LifeLine_WebAPi.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Post([FromForm] Donor value)
         {
+
+            if (!ModelState.IsValid)
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            if (!HelperClass.IsValidEmail(value.Email))
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            if (_context.Donors.Any(a => a.DonorCellNumber == value.DonorCellNumber))
+                return new HttpResponseMessage(HttpStatusCode.AlreadyReported);
+            //var _donor = new Donor
+            //{
+            //    DonorName = value.DonorName,
+            //    City = value.City,
+            //    DonorCellNumber = value.DonorCellNumber,
+            //    DonorBloodtype = value.DonorBloodtype,
+            //    Email=value.Email
+            //};
             try
             {
-                if (!ModelState.IsValid)
-                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
-                if (!HelperClass.IsValidEmail(value.Email))
-                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
-                if (_context.Donors.Any(a => a.DonorCellNumber == value.DonorCellNumber))
-                    return new HttpResponseMessage(HttpStatusCode.AlreadyReported);
-                //var _donor = new Donor
-                //{
-                //    DonorName = value.DonorName,
-                //    City = value.City,
-                //    DonorCellNumber = value.DonorCellNumber,
-                //    DonorBloodtype = value.DonorBloodtype,
-                //    Email=value.Email
-                //};
-                
                 await _context.Donors.AddAsync(value);
-                
+
                 await _context.SaveChangesAsync();
 
                 _context.ChangeTracker.Tracked += (s, e) =>
                   {
-                      
-                      
+
+
                   };
                 return new HttpResponseMessage(HttpStatusCode.Created);
                 //return message;
@@ -114,7 +114,7 @@ namespace LifeLine_WebAPi.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}", Name = "Delete")]
-        
+
         public async Task<HttpResponseMessage> Delete(int id)
         {
             var donor = _context.Donors.Where(a => a.DonorID == id).FirstOrDefault();
@@ -135,7 +135,7 @@ namespace LifeLine_WebAPi.Controllers
             }
             else { return new HttpResponseMessage(HttpStatusCode.NotFound); }
 
-            
+
 
 
         }

@@ -134,11 +134,17 @@ namespace LifeLine_WebAPi.Controllers
                 return NotFound();
             }
 
-            _context.Requests.Remove(request);
-            _context.Requestor.Remove(requestor);
-            await _context.SaveChangesAsync();
-
-            return Ok(requestor);
+            try
+            {
+                _context.Requests.Remove(request);
+                _context.Requestor.Remove(requestor);
+                await _context.SaveChangesAsync();
+                return Ok(requestor);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
 

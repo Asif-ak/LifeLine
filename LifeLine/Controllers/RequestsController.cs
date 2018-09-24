@@ -123,14 +123,9 @@ namespace LifeLine_WebAPi.Controllers
                 return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
             }
 
-            //if (id != requests.RequestID)
-            //{
-            //    return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
-            //}
-            var request = _context.Requests.Where(a => a.RequestID == id).Single();
-
             try
             {
+                var request = _context.Requests.Where(a => a.RequestID == id).Single();
                 request.IsActive = requests.IsActive;
                 _context.Entry(request).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
@@ -165,17 +160,21 @@ namespace LifeLine_WebAPi.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             var requests = await _context.Requests.FindAsync(id);
             if (requests == null)
             {
                 return NotFound();
             }
-
-            _context.Requests.Remove(requests);
-            await _context.SaveChangesAsync();
-
-            return Ok(requests);
+            try
+            {
+                _context.Requests.Remove(requests);
+                await _context.SaveChangesAsync();
+                return Ok(requests);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         private bool RequestsExists(int id)
