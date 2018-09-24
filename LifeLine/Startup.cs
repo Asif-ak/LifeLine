@@ -60,7 +60,18 @@ namespace LifeLine
                     TermsOfService = "GNU-GPL3",
                     Contact = new Swashbuckle.AspNetCore.Swagger.Contact { Name = "Muhammad Asif", Email = "asif.ak@hotmail.com" }
                 });
+                var app = System.AppContext.BaseDirectory;
+                swagger.IncludeXmlComments(System.IO.Path.GetFileName(app + GetXmlPath()));
+                swagger.DescribeAllEnumsAsStrings();
+                
             });
+        }
+        private string GetXmlPath()
+        {
+            
+            var assemblyname = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
+            var filename = System.IO.Path.GetFileName(assemblyname + ".xml");
+            return filename;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +90,7 @@ namespace LifeLine
             app.UseSwaggerUI(swagger =>
             {
                 swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Lifeline API V1");
+                
             });
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {

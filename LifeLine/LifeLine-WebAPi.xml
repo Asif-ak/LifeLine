@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LifeLine-WebAPi</name>
+    </assembly>
+    <members>
+        <member name="M:LifeLine_WebAPi.Controllers.DonorController.Get">
+            <summary>
+            Get all the registered donors.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LifeLine_WebAPi.Controllers.DonorController.Get(System.Int32)">
+            <summary>
+            Get the donor by id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifeLine_WebAPi.Controllers.DonorController.Post(LifeLine_WebApi.Models.Donor)">
+            <summary>
+            Register a donor.
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifeLine_WebAPi.Controllers.DonorController.Delete(System.Int32)">
+            <summary>
+            Delete the registered donor using id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

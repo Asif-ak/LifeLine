@@ -26,6 +26,10 @@ namespace LifeLine_WebAPi.Controllers
         }
 
         // GET: api/Requestors
+        /// <summary>
+        /// To get all the registered rquestors.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IEnumerable<Requestor> GetRequestor()
         {
@@ -34,6 +38,11 @@ namespace LifeLine_WebAPi.Controllers
         }
 
         // GET: api/Requestors/5
+        /// <summary>
+        /// To get all registered requestors by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRequestor([FromRoute] int id)
         {
@@ -53,6 +62,12 @@ namespace LifeLine_WebAPi.Controllers
         }
 
         // POST:api/Requestors
+        /// <summary>
+        /// To add both the requestors and requests.
+        /// </summary>
+        /// <param name="requestor"></param>
+        /// <param name="requests"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<HttpResponseMessage> PostRequestor([FromForm] Requestor requestor, [FromForm] Requests requests)
         {
@@ -99,6 +114,11 @@ namespace LifeLine_WebAPi.Controllers
         }
 
         // DELETE: api/Requestors/5
+        /// <summary>
+        /// To delete requestor and their correspondings requests by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRequestor([FromRoute] int id)
         {

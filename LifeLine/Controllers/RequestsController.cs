@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LifeLine_WebApi.DBConfiguration;
 using LifeLine_WebApi.Models;
+using System.Net.Http;
 
 namespace LifeLine_WebAPi.Controllers
 {
@@ -23,24 +24,28 @@ namespace LifeLine_WebAPi.Controllers
         }
 
         // GET: api/Requests
+        /// <summary>
+        /// To get requests and their corresponding requestors.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public IActionResult GetRequests()
+        public async Task<IActionResult> GetRequests()
         {
             //var result= _context.Requests.ToList();
-            var result = (from request in _context.Requests
-                          join requestor in _context.Requestor on request.RID equals requestor.ID
-                          select new
-                          {
-                              id = request.RequestID,
-                              requestedbloodtype = Enum.GetName(typeof(BloodType), request.RequestedBloodtype),
-                              Active = (bool)request.IsActive,
-                              requestornumber=requestor.RequestorCellNumber, // or requestor.id
-                              requestor = requestor.RequestorName
-                          }
-                         ).ToList();
-            if (result==null)
+            var result = await (from request in _context.Requests
+                                join requestor in _context.Requestor on request.RID equals requestor.ID
+                                select new
+                                {
+                                    id = request.RequestID,
+                                    requestedbloodtype = Enum.GetName(typeof(BloodType), request.RequestedBloodtype),
+                                    Active = (bool)request.IsActive,
+                                    requestornumber = requestor.RequestorCellNumber, // or requestor.id
+                                    requestor = requestor.RequestorName
+                                }
+                         ).ToListAsync();
+            if (result == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
             return Ok(result);
         }
@@ -67,24 +72,29 @@ namespace LifeLine_WebAPi.Controllers
         //
 
         //GET: api/Requests/92**********
+        /// <summary>
+        /// to get the requests by requestor's cell/mobile number.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
         [HttpGet("{number}", Name = "GetByNumber")] //// GET: api/Requests/923*********S
-        public IActionResult GetRequestsByNumber([FromRoute] string number)
+        public async Task<IActionResult> GetRequestsByNumber([FromRoute] string number)
         {
-            var result = (from requestor in _context.Requestor
-                          join request in _context.Requests on requestor.ID equals request.RID
-                          where requestor.RequestorCellNumber == number
-                          select new
-                          {
-                              id = requestor.ID,
-                              name = requestor.RequestorName,
-                              number = requestor.RequestorCellNumber,
-                              date = requestor.RequestedOn,
-                              city = requestor.City,
-                              address = requestor.DonationAddress,
-                              email = requestor.Email,
-                              requestedbloodtype = Enum.GetName(typeof(BloodType), request.RequestedBloodtype),
-                              Active = (bool)request.IsActive
-                          }).ToList();
+            var result = await (from requestor in _context.Requestor
+                                join request in _context.Requests on requestor.ID equals request.RID
+                                where requestor.RequestorCellNumber == number
+                                select new
+                                {
+                                    id = requestor.ID,
+                                    name = requestor.RequestorName,
+                                    number = requestor.RequestorCellNumber,
+                                    date = requestor.RequestedOn,
+                                    city = requestor.City,
+                                    address = requestor.DonationAddress,
+                                    email = requestor.Email,
+                                    requestedbloodtype = Enum.GetName(typeof(BloodType), request.RequestedBloodtype),
+                                    Active = (bool)request.IsActive
+                                }).ToListAsync();
 
 
 
@@ -99,17 +109,24 @@ namespace LifeLine_WebAPi.Controllers
         // isko bhi sai krna hai
 
         // PUT: api/Requests/5
+        /// <summary>
+        /// to update the requests status.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="requests"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRequests([FromRoute] int id, [FromForm] Requests requests)
+        public async Task<HttpResponseMessage> PutRequests([FromRoute] int id, [FromForm] Requests requests)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
             }
 
             if (id != requests.RequestID)
             {
-                return BadRequest();
+                return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
+
             }
             var request = _context.Requests.FirstOrDefault(a => a.RequestID == id);
             Requests _requests = new Requests
@@ -120,33 +137,36 @@ namespace LifeLine_WebAPi.Controllers
                 Requestor = request.Requestor
 
             };
-            //request.IsActive = requests.IsActive;
-            //request.RequestID = id;
-            //request.RequestedBloodtype = requests.RequestedBloodtype;
+
             _context.Entry(request).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+                return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException)
             {
                 if (!RequestsExists(id))
                 {
-                    return NotFound();
+                    return new HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
                 }
                 else
                 {
-                    throw;
+                    return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
                 }
             }
 
-            return NoContent();
         }
 
 
 
         // DELETE: api/Requests/5
+        /// <summary>
+        /// to delete individual request by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRequests([FromRoute] int id)
         {

@@ -23,6 +23,10 @@ namespace LifeLine_WebAPi.Controllers
             this._context = context;
         }
         // GET: api/Donor
+        /// <summary>
+        /// Get all the registered donors.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IEnumerable<Donor> Get()
         {
@@ -30,6 +34,11 @@ namespace LifeLine_WebAPi.Controllers
         }
 
         // GET: api/Donor/5
+        /// <summary>
+        /// Get the donor by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}", Name = "Get")]
         public async Task<IActionResult> Get(int id)
         {
@@ -48,6 +57,11 @@ namespace LifeLine_WebAPi.Controllers
 
         // POST: api/Donor
         // POST: will only accepts from form
+        /// <summary>
+        /// Register a donor.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<HttpResponseMessage> Post([FromForm] Donor value)
         {
@@ -94,6 +108,11 @@ namespace LifeLine_WebAPi.Controllers
         //}
 
         // DELETE: api/ApiWithActions/5
+        /// <summary>
+        /// Delete the registered donor using id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}", Name = "Delete")]
         
         public async Task<HttpResponseMessage> Delete(int id)

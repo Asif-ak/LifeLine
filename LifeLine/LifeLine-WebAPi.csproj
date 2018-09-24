@@ -6,6 +6,10 @@
     <RootNamespace>LifeLine-WebAPi</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>F:\from d\c#\sample\LifeLine-Blood\LifeLine\LifeLine\LifeLine-WebAPi.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
