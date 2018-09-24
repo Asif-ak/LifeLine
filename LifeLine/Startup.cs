@@ -39,6 +39,7 @@ namespace LifeLine
                 opt.DefaultApiVersion = new ApiVersion(1, 0);
                 //opt.ApiVersionReader = new HeaderApiVersionReader("api-version"); // we are not using HTTP hearders for reading version
             });
+            
 
             services.AddMvc().AddJsonOptions(opt =>
             {
@@ -48,6 +49,18 @@ namespace LifeLine
             var connection = "Data Source=LifeLine1.db";
             services.AddDbContext<LifeLineContext>
             (Options => Options.UseSqlite(connection));
+
+            services.AddSwaggerGen(swagger =>
+            {
+                swagger.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Version = "V1",
+                    Title = "LifeLine Blood Donation Web Api",
+                    Description = "A Dot Net Core based Web Api project for Blood Donation",
+                    TermsOfService = "GNU-GPL3",
+                    Contact = new Swashbuckle.AspNetCore.Swagger.Contact { Name = "Muhammad Asif", Email = "asif.ak@hotmail.com" }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,6 +74,12 @@ namespace LifeLine
             {
                 app.UseHsts();
             }
+            app.UseStaticFiles();
+            app.UseSwagger();
+            app.UseSwaggerUI(swagger =>
+            {
+                swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Lifeline API V1");
+            });
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
@@ -75,6 +94,8 @@ namespace LifeLine
             
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            
         }
     }
 }
