@@ -106,11 +106,11 @@ namespace LifeLine_WebAPi.Controllers
             return Ok(result);
         }
 
-        // isko bhi sai krna hai
+        // isko bhi sai krna hai. true se false ho raha hai laikn false se dobara true nai horaha 
 
         // PUT: api/Requests/5
         /// <summary>
-        /// to update the requests status.
+        /// to update the requests status. Only request status can be updated.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="requests"></param>
@@ -123,29 +123,20 @@ namespace LifeLine_WebAPi.Controllers
                 return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
             }
 
-            if (id != requests.RequestID)
-            {
-                return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
-
-            }
-            var request = _context.Requests.FirstOrDefault(a => a.RequestID == id);
-            Requests _requests = new Requests
-            {
-                IsActive = requests.IsActive,
-                RequestedBloodtype = requests.RequestedBloodtype,
-                RequestID = id,
-                Requestor = request.Requestor
-
-            };
-
-            _context.Entry(request).State = EntityState.Modified;
+            //if (id != requests.RequestID)
+            //{
+            //    return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
+            //}
+            var request = _context.Requests.Where(a => a.RequestID == id).Single();
 
             try
             {
+                request.IsActive = requests.IsActive;
+                _context.Entry(request).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
                 if (!RequestsExists(id))
                 {
